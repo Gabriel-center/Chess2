@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascension Chess - 8x8x8</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-layout">
+        <div id="controls-sidebar">
+            <h2>Controls</h2>
+            <div id="game-status-message" class="status-box">Game in progress...</div>
+            <div id="turn-indicator" class="status-box">Current Turn: <span id="current-player">White</span></div>
+
+            <div class="control-group">
+                <label>Zoom:</label>
+                <button id="zoom-out-btn">-</button>
+                <button id="zoom-in-btn">+</button>
+            </div>
+
+            <div class="control-group">
+                <label for="layer-slider">Focus Level (<span id="focused-layer-value">0</span>):</label>
+                <div class="slider-container">
+                    <span class="slider-label-end">VII</span>
+                    <input type="range" id="layer-slider" min="0" max="7" value="0" orient="vertical">
+                    <span class="slider-label-end">0</span>
+                </div>
+                <div id="current-layer-name">Level 0: White Pieces L0</div>
+            </div>
+
+            <div class="control-group">
+                <label for="opacity-slider">Off-Layer Opacity (<span id="off-layer-opacity-value">10</span>%):</label>
+                <input type="range" id="opacity-slider" min="0" max="100" value="10">
+            </div>
+
+            <div class="control-group">
+                <input type="checkbox" id="highlight-opaque-checkbox" checked>
+                <label for="highlight-opaque-checkbox" class="checkbox-label">Opaque & Clickable Highlights on Off-Layers</label>
+            </div>
+
+            <div id="selection-info" class="status-box">Phase: Select a piece.</div>
+            <button id="reset-game-btn">Reset Game</button>
+        </div>
+
+        <div id="game-area">
+            <h1 id="game-title">Ascension Chess (8x8x8)</h1>
+            <div id="board-wrapper">
+                <div id="board-display-isometric">
+                    <!-- Layers will be generated here by JavaScript -->
+                </div>
+            </div>
+             <details id="instructions-details">
+                <summary>?</summary>
+                <div class="instructions-content">
+                    <p><strong>Objective:</strong> Capture all of the opponent's Kings.</p>
+                    <p><strong>Controls:</strong></p>
+                    <ul>
+                        <li>Drag board area (not pieces) to pan.</li>
+                        <li>Use sliders/buttons for zoom, focus level, and off-layer opacity.</li>
+                        <li>Arrow Up/Down keys change focus level.</li>
+                    </ul>
+                    <p><strong>Gameplay:</strong></p>
+                    <ol>
+                        <li>Use "Focus Level" slider (or arrow keys) to select the layer of the piece you want to move.</li>
+                        <li>Click your piece on the focused layer. Valid moves will be highlighted.</li>
+                        <li>To choose a destination:
+                            <ul>
+                                <li>If "Opaque Highlights" is ON: Click any yellow (move) or red (capture) highlighted square directly, even if it's on an off-focus layer.</li>
+                                <li>If "Opaque Highlights" is OFF: Use "Focus Level" slider to select the destination layer, then click the highlighted square.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Pawn Movement:</strong></p>
+                    <ul>
+                        <li>Moves one level towards opponent's main piece layer (White: Up, Black: Down) if the square is empty. Can move two levels on its first move from starting layer.</li>
+                        <li>Captures: If the square it *would* move to is S, it can capture an enemy piece on any of the 8 squares adjacent to S (on S's level).</li>
+                        <li>Promotion: Reaching opponent's main piece layer (L0 for Black, L7 for White) promotes pawn (Queen by default).</li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script src="script.js"></script></body>
+</html>

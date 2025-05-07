@@ -1,0 +1,214 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #e8e8e8;
+    color: #333;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#main-layout {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#controls-sidebar {
+    width: 260px;
+    padding: 15px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow-y: auto;
+    gap: 8px;
+}
+
+#controls-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.status-box {
+    font-weight: bold;
+    padding: 8px;
+    background-color: #ddd;
+    border-radius: 4px;
+    width: 95%;
+    box-sizing: border-box;
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+#game-status-message.win-white { background-color: #90ee90; color: #006400;}
+#game-status-message.win-black { background-color: #b0c4de; color: #000080;}
+#game-status-message.draw { background-color: #f5f5dc; color: #8b4513;}
+
+
+.control-group {
+    padding: 8px;
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    width: 95%;
+    box-sizing: border-box;
+}
+
+.control-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 0.85em;
+}
+.checkbox-label {
+    display: inline-block;
+    font-weight: normal;
+    margin-left: 5px;
+    vertical-align: middle;
+    font-size: 0.9em;
+}
+
+#zoom-out-btn, #zoom-in-btn {
+    padding: 4px 8px; margin: 0 5px; font-size: 1em; cursor: pointer;
+}
+
+.slider-container {
+    display: flex; flex-direction: column; align-items: center;
+    height: 160px;
+    justify-content: center; margin-top: 3px;
+}
+
+#layer-slider {
+    width: 110px; height: 16px; transform: rotate(270deg); margin:0;
+}
+#opacity-slider {
+    width: 80%;
+}
+
+.slider-label-end { font-size: 0.75em; color: #555; margin: 4px 0;}
+#current-layer-name { font-weight: bold; margin-top: 3px; font-size: 0.85em;}
+
+#selection-info {
+    min-height: 50px;
+    word-wrap: break-word;
+    background-color: #e9e9e9;
+    margin-top: 3px;
+}
+
+#reset-game-btn {
+    padding: 8px 12px; margin-top: 10px; background-color: #ff6b6b;
+    color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
+}
+#reset-game-btn:hover { background-color: #ee5253; }
+
+#game-area {
+    flex-grow: 1; display: flex; flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    cursor: grab;
+    position: relative;
+}
+#game-area.grabbing { cursor: grabbing; }
+
+#game-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.8em;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+#board-wrapper {
+    width: auto; height: auto;
+    display: flex; align-items: center; justify-content: center;
+    position: absolute;
+}
+
+#board-display-isometric {
+    position: relative;
+    width: 320px; height: 320px;
+    transform-style: preserve-3d;
+    transition: transform 0.2s ease-out;
+}
+
+.layer { /* Parent layer div */
+    width: 100%; height: 100%;
+    display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+    position: absolute; box-sizing: border-box;
+    border: 1px solid #999; background-color: rgba(220, 220, 220, 0.05);
+    /* opacity and pointer-events are set by JS directly on this div */
+    transition: opacity 0.3s ease-in-out; /* Only for the layer itself, if its opacity is changed */
+}
+
+.cell { /* Individual cell div */
+    border: 1px solid #bbb; box-sizing: border-box;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none; position: relative;
+    /* opacity and pointer-events set by JS directly on the cell */
+    transition: background-color 0.15s, opacity 0.15s;
+}
+
+.cell-dark { background-color: #b0b0b0; }
+.cell-light { background-color: #e0e0e0; }
+
+.selected-piece-cell {
+    background-color: #66ccff !important;
+    box-shadow: inset 0 0 0 2px #007bff;
+}
+
+.valid-move-highlight {
+    background-color: rgba(255, 235, 59, 0.7) !important; /* Yellowish */
+    box-shadow: inset 0 0 0 1px rgba(204, 182, 47, 0.8);
+}
+.capture-move-highlight {
+    background-color: rgba(255, 100, 100, 0.7) !important; /* Light Reddish */
+    box-shadow: inset 0 0 0 1px rgba(204, 80, 80, 0.8);
+}
+
+/* This class might not be strictly needed if JS handles opacity directly, but can be a marker */
+.cell-on-off-layer {
+    /* JS sets opacity and pointer-events directly */
+}
+
+/* This class is primarily for CSS to ensure !important overrides if needed,
+   but JS will set opacity and pointer-events directly for these cells. */
+.force-opaque-clickable-highlight {
+    /* opacity: 1.0 !important; /* Changed to direct JS style */
+    /* pointer-events: auto !important; /* Changed to direct JS style */
+}
+
+
+.check-indicator {
+    position: absolute; top: -2px; right: 0px; color: #e74c3c;
+    font-size: 1.1em; font-weight: bold; text-shadow: 0 0 2px white;
+    pointer-events: none; z-index: 10;
+}
+
+#instructions-details {
+    position: fixed; bottom: 10px; right: 10px; z-index: 100;
+    background-color: #fff; border: 1px solid #ccc; border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-width: 300px;
+}
+#instructions-details summary {
+    padding: 8px 12px; cursor: pointer; font-weight: bold;
+    font-size: 1.2em; list-style: none; display: block;
+}
+#instructions-details summary::-webkit-details-marker { display: none; }
+#instructions-details summary::marker { display: none; }
+
+.instructions-content {
+    padding: 0 12px 12px 12px; font-size: 0.85em; line-height: 1.4;
+    max-height: 300px; overflow-y: auto; text-align: left;
+}
+.instructions-content ul, .instructions-content ol { padding-left: 20px; }
+.instructions-content p, .instructions-content ul, .instructions-content ol { margin-bottom: 8px; }
+.instructions-content strong { color: #333; }
