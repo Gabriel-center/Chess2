@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ascension Chess - 8x8x8</title>
+    <title>Ascension - 3D Chess</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♙</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,21 +18,34 @@
                 <label>Zoom:</label>
                 <button id="zoom-out-btn">-</button>
                 <button id="zoom-in-btn">+</button>
+                <div style="margin-top: 5px;">
+                    <input type="checkbox" id="adjust-layers-zoom-checkbox" checked>
+                    <label for="adjust-layers-zoom-checkbox" class="checkbox-label">Adjust Layers to Fit</label>
+                </div>
             </div>
 
             <div class="control-group">
                 <label for="layer-slider">Focus Level (<span id="focused-layer-value">0</span>):</label>
                 <div class="slider-container">
-                    <span class="slider-label-end">VII</span>
                     <input type="range" id="layer-slider" min="0" max="7" value="0" orient="vertical">
-                    <span class="slider-label-end">0</span>
                 </div>
                 <div id="current-layer-name">Level 0: White Pieces L0</div>
             </div>
+            
+            <div class="control-group">
+                <label for="layer-separation-slider">Layer Spread (<span id="layer-separation-value">30</span>px):</label>
+                <input type="range" id="layer-separation-slider" min="5" max="60" value="30">
+            </div>
 
             <div class="control-group">
-                <label for="opacity-slider">Off-Layer Opacity (<span id="off-layer-opacity-value">10</span>%):</label>
+                <label for="opacity-slider">Off-Layer BG Opacity (<span id="off-layer-opacity-value">10</span>%):</label>
                 <input type="range" id="opacity-slider" min="0" max="100" value="10">
+            </div>
+
+            <div class="control-group">
+                <label for="off-piece-opacity-slider">Off-Piece Opacity (<span id="off-piece-opacity-value">10</span>%):</label>
+                <input type="range" id="off-piece-opacity-slider" min="0" max="100" value="10">
+                <button id="link-opacities-btn" class="linked">🔗 Link Opacities</button>
             </div>
 
             <div class="control-group">
@@ -44,7 +58,7 @@
         </div>
 
         <div id="game-area">
-            <h1 id="game-title">Ascension Chess (8x8x8)</h1>
+            <h1 id="game-title">Ascension - 3D Chess</h1>
             <div id="board-wrapper">
                 <div id="board-display-isometric">
                     <!-- Layers will be generated here by JavaScript -->
@@ -57,8 +71,9 @@
                     <p><strong>Controls:</strong></p>
                     <ul>
                         <li>Drag board area (not pieces) to pan.</li>
-                        <li>Use sliders/buttons for zoom, focus level, and off-layer opacity.</li>
-                        <li>Arrow Up/Down keys change focus level.</li>
+                        <li>Use sliders/buttons for zoom, focus level, layer spread, and opacities.</li>
+                        <li>Arrow Up/Down keys change focus level (cycles top/bottom).</li>
+                        <li>"Adjust Layers to Fit" (zoom control): When OFF, layer separation remains fixed during zoom, potentially moving parts of the board off-screen. When ON, the entire 3D view scales.</li>
                     </ul>
                     <p><strong>Gameplay:</strong></p>
                     <ol>
@@ -74,7 +89,7 @@
                     <p><strong>Pawn Movement:</strong></p>
                     <ul>
                         <li>Moves one level towards opponent's main piece layer (White: Up, Black: Down) if the square is empty. Can move two levels on its first move from starting layer.</li>
-                        <li>Captures: If the square it *would* move to is S, it can capture an enemy piece on any of the 8 squares adjacent to S (on S's level).</li>
+                        <li>Captures: If the square it *would* move to is S, it can capture an enemy piece on any of the 4 squares cardinally adjacent to S (up, down, left, right) on S's level.</li>
                         <li>Promotion: Reaching opponent's main piece layer (L0 for Black, L7 for White) promotes pawn (Queen by default).</li>
                     </ul>
                 </div>
