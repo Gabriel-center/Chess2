@@ -15,7 +15,7 @@ body {
 }
 
 #controls-sidebar {
-    width: 260px;
+    width: 270px; 
     padding: 15px;
     background-color: #f4f4f4;
     border-right: 1px solid #ccc;
@@ -25,23 +25,23 @@ body {
     align-items: center;
     text-align: center;
     overflow-y: auto;
-    gap: 8px;
+    gap: 6px;
 }
 
 #controls-sidebar h2 {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .status-box {
     font-weight: bold;
-    padding: 8px;
+    padding: 7px;
     background-color: #ddd;
     border-radius: 4px;
     width: 95%;
     box-sizing: border-box;
-    font-size: 0.85em;
-    line-height: 1.3;
+    font-size: 0.8em;
+    line-height: 1.2;
 }
 
 #game-status-message.win-white { background-color: #90ee90; color: #006400;}
@@ -50,7 +50,7 @@ body {
 
 
 .control-group {
-    padding: 8px;
+    padding: 7px;
     background-color: #fff;
     border-radius: 6px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -61,47 +61,64 @@ body {
 .control-group label {
     display: block;
     font-weight: bold;
-    margin-bottom: 6px;
-    font-size: 0.85em;
+    margin-bottom: 5px;
+    font-size: 0.8em;
 }
 .checkbox-label {
     display: inline-block;
     font-weight: normal;
     margin-left: 5px;
     vertical-align: middle;
-    font-size: 0.9em;
+    font-size: 0.85em;
 }
 
 #zoom-out-btn, #zoom-in-btn {
-    padding: 4px 8px; margin: 0 5px; font-size: 1em; cursor: pointer;
+    padding: 3px 7px; margin: 0 4px; font-size: 0.9em; cursor: pointer;
 }
 
 .slider-container {
     display: flex; flex-direction: column; align-items: center;
-    height: 160px;
-    justify-content: center; margin-top: 3px;
+    height: 140px;
+    justify-content: center; margin-top: 2px;
 }
 
-#layer-slider {
-    width: 110px; height: 16px; transform: rotate(270deg); margin:0;
+#layer-slider { 
+    width: 100px; height: 14px; transform: rotate(270deg); margin:0;
 }
-#opacity-slider {
+#layer-separation-slider, 
+#opacity-slider, 
+#off-piece-opacity-slider {
     width: 80%;
+    margin-top: 2px;
 }
 
-.slider-label-end { font-size: 0.75em; color: #555; margin: 4px 0;}
-#current-layer-name { font-weight: bold; margin-top: 3px; font-size: 0.85em;}
+#link-opacities-btn {
+    font-size: 0.8em;
+    padding: 3px 6px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    cursor: pointer;
+    border-radius: 3px;
+}
+#link-opacities-btn.linked {
+    background-color: #c8e6c9; 
+    border-color: #a5d6a7;
+}
+
+.slider-label-end { font-size: 0.7em; color: #555; margin: 3px 0;}
+#current-layer-name { font-weight: bold; margin-top: 2px; font-size: 0.8em;}
 
 #selection-info {
-    min-height: 50px;
+    min-height: 45px;
     word-wrap: break-word;
     background-color: #e9e9e9;
-    margin-top: 3px;
+    margin-top: 2px;
 }
 
 #reset-game-btn {
-    padding: 8px 12px; margin-top: 10px; background-color: #ff6b6b;
-    color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
+    padding: 7px 10px; margin-top: 8px; background-color: #ff6b6b;
+    color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9em;
 }
 #reset-game-btn:hover { background-color: #ee5253; }
 
@@ -118,7 +135,7 @@ body {
 #game-title {
     margin-top: 0;
     margin-bottom: 10px;
-    font-size: 1.8em;
+    font-size: 1.6em; 
     text-align: center;
     width: 100%;
     position: relative;
@@ -133,59 +150,44 @@ body {
 
 #board-display-isometric {
     position: relative;
-    width: 320px; height: 320px;
+    width: 320px; height: 320px; /* Base size, JS might override width/height */
     transform-style: preserve-3d;
-    transition: transform 0.2s ease-out;
+    transition: transform 0.2s ease-out; /* For rotation and scale (mode ON) */
 }
 
-.layer { /* Parent layer div */
+.layer { 
     width: 100%; height: 100%;
     display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
     position: absolute; box-sizing: border-box;
-    border: 1px solid #999; background-color: rgba(220, 220, 220, 0.05);
-    /* opacity and pointer-events are set by JS directly on this div */
-    transition: opacity 0.3s ease-in-out; /* Only for the layer itself, if its opacity is changed */
+    border: 1px solid rgba(153,153,153, 0.5); 
+    background-color: transparent; 
+    transition: transform 0.3s ease-in-out; 
 }
 
-.cell { /* Individual cell div */
-    border: 1px solid #bbb; box-sizing: border-box;
+.cell { 
+    box-sizing: border-box;
     display: flex; justify-content: center; align-items: center;
     font-size: 20px;
     cursor: pointer;
     user-select: none; position: relative;
-    /* opacity and pointer-events set by JS directly on the cell */
-    transition: background-color 0.15s, opacity 0.15s;
+    transition: background-color 0.15s, color 0.15s; 
+    opacity: 1; 
+    overflow: hidden; /* Added for Bug 4A mitigation */
 }
 
-.cell-dark { background-color: #b0b0b0; }
-.cell-light { background-color: #e0e0e0; }
-
-.selected-piece-cell {
-    background-color: #66ccff !important;
+.selected-piece-cell { 
+    background-color: #66ccff !important; 
     box-shadow: inset 0 0 0 2px #007bff;
 }
 
 .valid-move-highlight {
-    background-color: rgba(255, 235, 59, 0.7) !important; /* Yellowish */
-    box-shadow: inset 0 0 0 1px rgba(204, 182, 47, 0.8);
+    background-color: rgba(255, 235, 59, 0.9) !important; 
+    box-shadow: inset 0 0 0 1px rgba(204, 182, 47, 0.9);
 }
 .capture-move-highlight {
-    background-color: rgba(255, 100, 100, 0.7) !important; /* Light Reddish */
-    box-shadow: inset 0 0 0 1px rgba(204, 80, 80, 0.8);
+    background-color: rgba(255, 100, 100, 0.9) !important; 
+    box-shadow: inset 0 0 0 1px rgba(204, 80, 80, 0.9);
 }
-
-/* This class might not be strictly needed if JS handles opacity directly, but can be a marker */
-.cell-on-off-layer {
-    /* JS sets opacity and pointer-events directly */
-}
-
-/* This class is primarily for CSS to ensure !important overrides if needed,
-   but JS will set opacity and pointer-events directly for these cells. */
-.force-opaque-clickable-highlight {
-    /* opacity: 1.0 !important; /* Changed to direct JS style */
-    /* pointer-events: auto !important; /* Changed to direct JS style */
-}
-
 
 .check-indicator {
     position: absolute; top: -2px; right: 0px; color: #e74c3c;
